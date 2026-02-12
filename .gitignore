@@ -1,0 +1,34 @@
+# Dependencies
+node_modules/
+
+# Environment
+.env
+.env.local
+.env.production
+
+# Logs
+logs/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# SSL certificates
+docker/nginx/ssl/*.pem
+docker/nginx/ssl/*.key
+docker/nginx/ssl/*.crt
+
+# DKIM keys
+docker/postfix/opendkim/keys/
+
+# Backups
+backup/*.gpg
+backup/*.sql
+
+# Drizzle
+src/db/migrations/meta/
+
+# IDE
+.vscode/
+.idea/

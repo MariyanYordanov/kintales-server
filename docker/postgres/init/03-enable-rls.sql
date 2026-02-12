@@ -1,0 +1,23 @@
+-- ============================================
+-- Row Level Security (RLS) — Template
+-- ============================================
+-- RLS policies are applied AFTER Drizzle creates the tables via migrations.
+-- This file documents the intended RLS strategy.
+--
+-- Pattern: Each request sets app.user_id via SET LOCAL:
+--   SET LOCAL app.user_id = '<uuid>';
+--
+-- profiles:       user can only SELECT/UPDATE own profile
+-- family_trees:   only members (via tree_members) can access
+-- tree_members:   user can see trees they are member of
+-- relatives:      only tree members
+-- relationships:  only tree members
+-- photos:         only tree members
+-- audio:          only tree members
+-- stories:        only tree members; only author can UPDATE/DELETE
+-- comments:       only tree members; only author can DELETE
+-- death_records:  only tree members
+-- legacy_keys:    tree members can create; anyone with valid code can redeem
+--
+-- Actual SQL policies will be applied as part of a migration
+-- after the initial schema is created.

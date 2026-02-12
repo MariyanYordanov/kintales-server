@@ -1,0 +1,30 @@
+# ============================================
+# KinTales Postfix Configuration
+# ============================================
+
+# --- General ---
+myhostname = mail.kintales.com
+mydomain = kintales.com
+myorigin = $mydomain
+mydestination = localhost
+inet_interfaces = all
+inet_protocols = ipv4
+
+# --- TLS ---
+smtpd_tls_cert_file = /etc/ssl/certs/ssl-cert-snakeoil.pem
+smtpd_tls_key_file = /etc/ssl/private/ssl-cert-snakeoil.key
+smtpd_tls_security_level = may
+smtp_tls_security_level = may
+
+# --- DKIM (OpenDKIM milter) ---
+milter_default_action = accept
+milter_protocol = 6
+smtpd_milters = inet:localhost:8891
+non_smtpd_milters = inet:localhost:8891
+
+# --- Relay restrictions (accept only from Docker internal network) ---
+smtpd_relay_restrictions = permit_mynetworks, reject_unauth_destination
+mynetworks = 127.0.0.0/8 172.0.0.0/8
+
+# --- Size limit ---
+message_size_limit = 10240000

@@ -19,6 +19,7 @@
   "dependencies": {
     "argon2": "^0.41.1",
     "bg-name-days": "file:../kintales-name-days",
+    "clamscan": "^2.4.0",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "drizzle-orm": "^0.38.4",
@@ -33,6 +34,7 @@
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
     "pg": "^8.13.1",
+    "sharp": "^0.34.5",
     "socket.io": "^4.8.1",
     "winston": "^3.17.0",
     "zod": "^3.24.1"

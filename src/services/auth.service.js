@@ -17,6 +17,7 @@ import {
   verifyPasswordResetToken,
 } from '../utils/tokens.js';
 import { unauthorized, conflict } from '../utils/errors.js';
+import { sanitizeProfile } from '../utils/sanitize.js';
 import { sendPasswordResetEmail } from './email.service.js';
 import logger from '../utils/logger.js';
 
@@ -26,22 +27,6 @@ const ARGON2_OPTIONS = {
   timeCost: 3,
   parallelism: 4,
 };
-
-/**
- * Sanitize a profile row — strip passwordHash and internal fields.
- * @param {object} profile
- * @returns {object}
- */
-function sanitizeUser(profile) {
-  return {
-    id: profile.id,
-    email: profile.email,
-    fullName: profile.fullName,
-    avatarUrl: profile.avatarUrl,
-    bio: profile.bio,
-    language: profile.language,
-  };
-}
 
 /**
  * Create a profile + family tree + tree membership in a transaction.
@@ -126,7 +111,7 @@ export async function registerUser({ email, password, fullName, language, device
   const tokens = await createTokenPair(result.id, result.email, deviceInfo);
 
   return {
-    user: sanitizeUser(result),
+    user: sanitizeProfile(result),
     ...tokens,
   };
 }
@@ -164,7 +149,7 @@ export async function loginUser({ email, password, deviceInfo }) {
   const tokens = await createTokenPair(user.id, user.email, deviceInfo);
 
   return {
-    user: sanitizeUser(user),
+    user: sanitizeProfile(user),
     ...tokens,
   };
 }
@@ -315,7 +300,7 @@ export async function findOrCreateGoogleUser({ email, fullName, avatarUrl, devic
   const tokens = await createTokenPair(user.id, user.email, deviceInfo);
 
   return {
-    user: sanitizeUser(user),
+    user: sanitizeProfile(user),
     ...tokens,
   };
 }

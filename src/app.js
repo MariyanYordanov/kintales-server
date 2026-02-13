@@ -7,6 +7,7 @@ import { corsMiddleware } from './middleware/cors.middleware.js';
 import { globalLimiter } from './middleware/rateLimit.middleware.js';
 import { configurePassport } from './config/passport.js';
 import authRoutes from './routes/auth.routes.js';
+import profileRoutes from './routes/profile.routes.js';
 import { AppError } from './utils/errors.js';
 import logger from './utils/logger.js';
 import { pool } from './config/database.js';
@@ -50,7 +51,10 @@ app.get('/api', (_req, res) => {
 // Auth routes
 app.use('/api/auth', authRoutes);
 
-// TODO: Mount route modules in Feature 1.2+
+// Profile routes
+app.use('/api/profile', profileRoutes);
+
+// TODO: Mount route modules in Feature 1.3+
 // app.use('/api/trees', treeRoutes);
 // ...
 

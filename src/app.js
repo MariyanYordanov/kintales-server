@@ -1,9 +1,12 @@
 import 'dotenv/config';
 import express from 'express';
 import { createServer } from 'node:http';
+import passport from 'passport';
 import { securityMiddleware } from './middleware/security.middleware.js';
 import { corsMiddleware } from './middleware/cors.middleware.js';
 import { globalLimiter } from './middleware/rateLimit.middleware.js';
+import { configurePassport } from './config/passport.js';
+import authRoutes from './routes/auth.routes.js';
 import { AppError } from './utils/errors.js';
 import logger from './utils/logger.js';
 import { pool } from './config/database.js';
@@ -28,6 +31,10 @@ app.use(globalLimiter);
 // 4. Body parser
 app.use(express.json({ limit: '2mb' }));
 
+// 5. Passport initialization (JWT only, no sessions)
+configurePassport();
+app.use(passport.initialize());
+
 // === Routes ===
 
 // Health check (for Docker healthcheck + monitoring)
@@ -40,8 +47,10 @@ app.get('/api', (_req, res) => {
   res.json({ message: 'KinTales API v0.1.0' });
 });
 
-// TODO: Mount route modules in Feature 1.1+
-// app.use('/api/auth', authRoutes);
+// Auth routes
+app.use('/api/auth', authRoutes);
+
+// TODO: Mount route modules in Feature 1.2+
 // app.use('/api/trees', treeRoutes);
 // ...
 

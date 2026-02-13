@@ -23,11 +23,11 @@ export const forbidden = (message = 'Forbidden') =>
 export const conflict = (message = 'Conflict') =>
   new AppError(message, 409, 'CONFLICT');
 
-export const validationError = (errors) =>
-  Object.assign(
-    new AppError('Validation failed', 422, 'VALIDATION_ERROR'),
-    { errors }
-  );
+export const validationError = (errors) => {
+  const err = new AppError('Validation failed', 422, 'VALIDATION_ERROR');
+  err.errors = errors;
+  return err;
+};
 
 export const internalError = (message = 'Internal server error') =>
   new AppError(message, 500, 'INTERNAL_ERROR');

@@ -6,9 +6,13 @@ import { corsMiddleware } from './middleware/cors.middleware.js';
 import { globalLimiter } from './middleware/rateLimit.middleware.js';
 import { AppError } from './utils/errors.js';
 import logger from './utils/logger.js';
+import { pool } from './config/database.js';
 
 const app = express();
 const server = createServer(app);
+
+// Trust first proxy (Nginx) — required for rate limiting behind reverse proxy
+app.set('trust proxy', 1);
 
 // === Middleware Chain (spec order) ===
 
@@ -22,7 +26,7 @@ app.use(corsMiddleware);
 app.use(globalLimiter);
 
 // 4. Body parser
-app.use(express.json({ limit: '10mb' }));
+app.use(express.json({ limit: '2mb' }));
 
 // === Routes ===
 
@@ -72,6 +76,36 @@ const PORT = process.env.API_PORT || 3000;
 
 server.listen(PORT, () => {
   logger.info(`KinTales API listening on port ${PORT}`);
+});
+
+// === Graceful Shutdown ===
+const shutdown = (signal) => {
+  logger.info(`${signal} received — shutting down gracefully`);
+  server.close(() => {
+    logger.info('HTTP server closed');
+    pool.end(() => {
+      logger.info('Database pool closed');
+      process.exit(0);
+    });
+  });
+
+  // Force exit after 10 seconds
+  setTimeout(() => {
+    logger.error('Graceful shutdown timed out — forcing exit');
+    process.exit(1);
+  }, 10_000).unref();
+};
+
+process.on('SIGTERM', () => shutdown('SIGTERM'));
+process.on('SIGINT', () => shutdown('SIGINT'));
+
+process.on('unhandledRejection', (reason) => {
+  logger.error('Unhandled rejection', { reason: String(reason) });
+});
+
+process.on('uncaughtException', (err) => {
+  logger.error('Uncaught exception', { error: err.message, stack: err.stack });
+  shutdown('uncaughtException');
 });
 
 export default app;

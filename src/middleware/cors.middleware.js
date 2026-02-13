@@ -1,4 +1,5 @@
 import cors from 'cors';
+import { AppError } from '../utils/errors.js';
 
 const allowedOrigins = (process.env.APP_URL || 'http://localhost:3000')
   .split(',')
@@ -10,7 +11,7 @@ export const corsMiddleware = cors({
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      callback(new AppError('Not allowed by CORS', 403, 'CORS_ERROR'));
     }
   },
   credentials: true,

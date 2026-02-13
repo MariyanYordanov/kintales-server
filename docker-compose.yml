@@ -4,8 +4,12 @@ services:
     volumes:
       - pg_data:/var/lib/postgresql/data
     environment:
+      POSTGRES_USER: postgres
       POSTGRES_DB: kintales
       POSTGRES_PASSWORD: ${DB_ROOT_PASSWORD}
+      KINTALES_APP_DB_PASSWORD: ${KINTALES_APP_DB_PASSWORD}
+      KINTALES_ADMIN_DB_PASSWORD: ${KINTALES_ADMIN_DB_PASSWORD}
+      KINTALES_BACKUP_DB_PASSWORD: ${KINTALES_BACKUP_DB_PASSWORD}
     networks:
       - internal
     restart: unless-stopped

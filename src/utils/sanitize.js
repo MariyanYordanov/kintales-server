@@ -78,3 +78,42 @@ export function sanitizeRelationship(rel) {
     createdAt: rel.createdAt,
   };
 }
+
+/**
+ * Sanitize a photo row — replace fileUrl with presigned URL.
+ * @param {object} photo - Drizzle photos row
+ * @param {string|null} presignedUrl - Presigned URL for the file
+ * @returns {object} Safe photo object for API responses
+ */
+export function sanitizePhoto(photo, presignedUrl) {
+  return {
+    id: photo.id,
+    relativeId: photo.relativeId,
+    fileUrl: presignedUrl,
+    caption: photo.caption,
+    dateTakenYear: photo.dateTakenYear,
+    dateTakenMonth: photo.dateTakenMonth,
+    dateTakenDay: photo.dateTakenDay,
+    sortOrder: photo.sortOrder,
+    uploadedBy: photo.uploadedBy,
+    createdAt: photo.createdAt,
+  };
+}
+
+/**
+ * Sanitize an audio recording row — replace fileUrl with presigned URL.
+ * @param {object} audio - Drizzle audio_recordings row
+ * @param {string|null} presignedUrl - Presigned URL for the file
+ * @returns {object} Safe audio object for API responses
+ */
+export function sanitizeAudio(audio, presignedUrl) {
+  return {
+    id: audio.id,
+    relativeId: audio.relativeId,
+    title: audio.title,
+    fileUrl: presignedUrl,
+    durationSeconds: audio.durationSeconds,
+    uploadedBy: audio.uploadedBy,
+    createdAt: audio.createdAt,
+  };
+}

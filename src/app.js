@@ -11,6 +11,8 @@ import profileRoutes from './routes/profile.routes.js';
 import treeRoutes from './routes/tree.routes.js';
 import relativesRoutes from './routes/relatives.routes.js';
 import relationshipsRoutes from './routes/relationships.routes.js';
+import photosRoutes from './routes/photos.routes.js';
+import audioRoutes from './routes/audio.routes.js';
 import { AppError } from './utils/errors.js';
 import logger from './utils/logger.js';
 import { pool } from './config/database.js';
@@ -61,6 +63,10 @@ app.use('/api/profile', profileRoutes);
 app.use('/api/trees', treeRoutes);
 app.use('/api/relatives', relativesRoutes);
 app.use('/api/relationships', relationshipsRoutes);
+
+// Media routes (Feature 2.2)
+app.use('/api/photos', photosRoutes);
+app.use('/api/audio', audioRoutes);
 
 // 404 handler
 app.use((_req, _res, next) => {

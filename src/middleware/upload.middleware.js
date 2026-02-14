@@ -17,9 +17,10 @@ const SIZE_LIMITS = {
  * Create a multer upload middleware for a specific file type.
  * Uses memory storage (buffer available via req.file.buffer).
  * @param {'avatar'|'photo'|'audio'} type
+ * @param {number} [maxFiles=1] - Max number of files (>1 uses .array())
  * @returns {import('multer').Multer}
  */
-export function createUploadMiddleware(type) {
+export function createUploadMiddleware(type, maxFiles = 1) {
   const allowedTypes = ALLOWED_TYPES[type];
   const sizeLimit = SIZE_LIMITS[type];
 
@@ -27,7 +28,7 @@ export function createUploadMiddleware(type) {
     storage: multer.memoryStorage(),
     limits: {
       fileSize: sizeLimit,
-      files: 1,
+      files: maxFiles,
     },
     fileFilter: (_req, file, cb) => {
       if (!allowedTypes.includes(file.mimetype)) {

@@ -7,6 +7,8 @@ import {
   paramsWithRelativeId,
 } from './relatives.schemas.js';
 import * as relativesService from '../services/relatives.service.js';
+import * as photosService from '../services/photos.service.js';
+import * as audioService from '../services/audio.service.js';
 
 const router = Router();
 
@@ -48,6 +50,26 @@ router.delete('/:id', validate(paramsWithRelativeId), async (req, res, next) => 
   try {
     await relativesService.deleteRelative(req.params.id, req.user.userId);
     res.json({ data: { success: true } });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// GET /api/relatives/:id/photos — list photos for a relative
+router.get('/:id/photos', validate(paramsWithRelativeId), async (req, res, next) => {
+  try {
+    const photos = await photosService.getRelativePhotos(req.params.id, req.user.userId);
+    res.json({ data: photos });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// GET /api/relatives/:id/audio — list audio recordings for a relative
+router.get('/:id/audio', validate(paramsWithRelativeId), async (req, res, next) => {
+  try {
+    const audio = await audioService.getRelativeAudio(req.params.id, req.user.userId);
+    res.json({ data: audio });
   } catch (err) {
     next(err);
   }

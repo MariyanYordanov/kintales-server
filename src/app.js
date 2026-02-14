@@ -8,6 +8,9 @@ import { globalLimiter } from './middleware/rateLimit.middleware.js';
 import { configurePassport } from './config/passport.js';
 import authRoutes from './routes/auth.routes.js';
 import profileRoutes from './routes/profile.routes.js';
+import treeRoutes from './routes/tree.routes.js';
+import relativesRoutes from './routes/relatives.routes.js';
+import relationshipsRoutes from './routes/relationships.routes.js';
 import { AppError } from './utils/errors.js';
 import logger from './utils/logger.js';
 import { pool } from './config/database.js';
@@ -54,9 +57,10 @@ app.use('/api/auth', authRoutes);
 // Profile routes
 app.use('/api/profile', profileRoutes);
 
-// TODO: Mount route modules in Feature 1.3+
-// app.use('/api/trees', treeRoutes);
-// ...
+// Tree routes (Feature 2.1)
+app.use('/api/trees', treeRoutes);
+app.use('/api/relatives', relativesRoutes);
+app.use('/api/relationships', relationshipsRoutes);
 
 // 404 handler
 app.use((_req, _res, next) => {

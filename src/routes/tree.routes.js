@@ -1,0 +1,54 @@
+import { Router } from 'express';
+import { authenticate } from '../middleware/auth.middleware.js';
+import { validate } from '../middleware/validate.middleware.js';
+import { requireTreeRole } from '../middleware/treeAccess.middleware.js';
+import { paramsWithId, updateTreeSchema } from './tree.schemas.js';
+import * as treeService from '../services/tree.service.js';
+import * as relativesService from '../services/relatives.service.js';
+
+const router = Router();
+
+// All tree routes require authentication
+router.use(authenticate);
+
+// GET /api/trees — user's trees
+router.get('/', async (req, res, next) => {
+  try {
+    const trees = await treeService.getUserTrees(req.user.userId);
+    res.json({ data: trees });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// GET /api/trees/:id — tree details (any member)
+router.get('/:id', validate(paramsWithId), requireTreeRole('viewer'), async (req, res, next) => {
+  try {
+    const tree = await treeService.getTreeById(req.params.id, req.treeMembership.role);
+    res.json({ data: tree });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// PUT /api/trees/:id — update tree name (owner only)
+router.put('/:id', validate(updateTreeSchema), requireTreeRole('owner'), async (req, res, next) => {
+  try {
+    const tree = await treeService.updateTree(req.params.id, req.body);
+    res.json({ data: tree });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// GET /api/trees/:id/relatives — all relatives in tree (any member)
+router.get('/:id/relatives', validate(paramsWithId), requireTreeRole('viewer'), async (req, res, next) => {
+  try {
+    const relatives = await relativesService.getTreeRelatives(req.params.id);
+    res.json({ data: relatives });
+  } catch (err) {
+    next(err);
+  }
+});
+
+export default router;

@@ -5,6 +5,7 @@ import { requireTreeRole } from '../middleware/treeAccess.middleware.js';
 import { paramsWithId, updateTreeSchema } from './tree.schemas.js';
 import * as treeService from '../services/tree.service.js';
 import * as relativesService from '../services/relatives.service.js';
+import * as deathService from '../services/death.service.js';
 
 const router = Router();
 
@@ -46,6 +47,16 @@ router.get('/:id/relatives', validate(paramsWithId), requireTreeRole('viewer'), 
   try {
     const relatives = await relativesService.getTreeRelatives(req.params.id);
     res.json({ data: relatives });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// GET /api/trees/:id/death-records — death records for tree (any member)
+router.get('/:id/death-records', validate(paramsWithId), requireTreeRole('viewer'), async (req, res, next) => {
+  try {
+    const records = await deathService.getTreeDeathRecords(req.params.id, req.user.userId);
+    res.json({ data: records });
   } catch (err) {
     next(err);
   }

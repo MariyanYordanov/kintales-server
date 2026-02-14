@@ -13,9 +13,11 @@ import relativesRoutes from './routes/relatives.routes.js';
 import relationshipsRoutes from './routes/relationships.routes.js';
 import photosRoutes from './routes/photos.routes.js';
 import audioRoutes from './routes/audio.routes.js';
+import deathRoutes from './routes/death.routes.js';
 import { AppError } from './utils/errors.js';
 import logger from './utils/logger.js';
 import { pool } from './config/database.js';
+import { startScheduler } from './jobs/scheduler.js';
 
 const app = express();
 const server = createServer(app);
@@ -68,6 +70,9 @@ app.use('/api/relationships', relationshipsRoutes);
 app.use('/api/photos', photosRoutes);
 app.use('/api/audio', audioRoutes);
 
+// Death records (Feature 2.3)
+app.use('/api/death-records', deathRoutes);
+
 // 404 handler
 app.use((_req, _res, next) => {
   next(new AppError('Route not found', 404, 'ROUTE_NOT_FOUND'));
@@ -99,6 +104,7 @@ const PORT = process.env.API_PORT || 3000;
 
 server.listen(PORT, () => {
   logger.info(`KinTales API listening on port ${PORT}`);
+  startScheduler();
 });
 
 // === Graceful Shutdown ===

@@ -117,3 +117,58 @@ export function sanitizeAudio(audio, presignedUrl) {
     createdAt: audio.createdAt,
   };
 }
+
+/**
+ * Sanitize a death record row.
+ * causeOfDeath is sensitive — only shown to reporter and tree owner.
+ * @param {object} record - Drizzle death_records row
+ * @param {{ showCause?: boolean }} [options]
+ * @returns {object} Safe death record for API responses
+ */
+export function sanitizeDeathRecord(record, { showCause = false } = {}) {
+  return {
+    id: record.id,
+    relativeId: record.relativeId,
+    reportedBy: record.reportedBy,
+    deathYear: record.deathYear,
+    deathMonth: record.deathMonth,
+    deathDay: record.deathDay,
+    deathTime: record.deathTime,
+    status: record.status,
+    confirmationsNeeded: record.confirmationsNeeded,
+    autoConfirmAt: record.autoConfirmAt,
+    confirmedAt: record.confirmedAt,
+    createdAt: record.createdAt,
+    ...(showCause && { causeOfDeath: record.causeOfDeath }),
+  };
+}
+
+/**
+ * Sanitize a death confirmation row.
+ * @param {object} conf - Drizzle death_confirmations row
+ * @returns {object} Safe confirmation for API responses
+ */
+export function sanitizeDeathConfirmation(conf) {
+  return {
+    id: conf.id,
+    deathRecordId: conf.deathRecordId,
+    userId: conf.userId,
+    confirmed: conf.confirmed,
+    createdAt: conf.createdAt,
+  };
+}
+
+/**
+ * Sanitize a commemoration row.
+ * @param {object} comm - Drizzle commemorations row
+ * @returns {object} Safe commemoration for API responses
+ */
+export function sanitizeCommemoration(comm) {
+  return {
+    id: comm.id,
+    relativeId: comm.relativeId,
+    type: comm.type,
+    commDate: comm.commDate,
+    createdAt: comm.createdAt,
+  };
+}

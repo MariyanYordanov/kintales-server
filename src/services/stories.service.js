@@ -7,6 +7,7 @@ import { verifyMimeType } from '../utils/mimeVerify.js';
 import { scanFileBuffer } from './virusScan.service.js';
 import { uploadFile, getPresignedUrl, deleteFile, BUCKETS } from './storage.service.js';
 import { sanitizeStory, sanitizeAttachment } from '../utils/sanitize.js';
+import * as commentsService from './comments.service.js';
 import logger from '../utils/logger.js';
 
 const PHOTO_MIMES = ['image/jpeg', 'image/png', 'image/webp'];
@@ -249,10 +250,10 @@ export async function createStory(treeId, userId, data, files = []) {
 }
 
 /**
- * Get a single story by ID with attachments.
+ * Get a single story by ID with attachments and comments.
  * @param {string} storyId
  * @param {string} userId
- * @returns {Promise<object>} Sanitized story with attachments
+ * @returns {Promise<object>} Sanitized story with attachments and comments
  */
 export async function getStoryById(storyId, userId) {
   const [story] = await db
@@ -267,8 +268,12 @@ export async function getStoryById(storyId, userId) {
 
   await verifyTreeAccess(story.treeId, userId, 'viewer');
 
-  const attachments = await loadAttachments(storyId);
-  return sanitizeStory(story, attachments);
+  const [attachments, commentsList] = await Promise.all([
+    loadAttachments(storyId),
+    commentsService.getStoryComments(storyId),
+  ]);
+
+  return sanitizeStory(story, attachments, commentsList);
 }
 
 /**

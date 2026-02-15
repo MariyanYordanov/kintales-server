@@ -4,8 +4,10 @@ import { uploadLimiter } from '../middleware/rateLimit.middleware.js';
 import { createUploadMiddleware, handleUploadError } from '../middleware/upload.middleware.js';
 import { validate } from '../middleware/validate.middleware.js';
 import { createStorySchema, updateStorySchema, paramsWithStoryId } from './stories.schemas.js';
+import { createCommentSchema } from './comments.schemas.js';
 import { badRequest } from '../utils/errors.js';
 import * as storiesService from '../services/stories.service.js';
+import * as commentsService from '../services/comments.service.js';
 
 const router = Router();
 
@@ -57,6 +59,20 @@ router.put('/:id', validate(updateStorySchema), async (req, res, next) => {
       req.body,
     );
     res.json({ data: story });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// POST /api/stories/:id/comments — add comment (any tree member)
+router.post('/:id/comments', validate(createCommentSchema), async (req, res, next) => {
+  try {
+    const comment = await commentsService.createComment(
+      req.params.id,
+      req.user.userId,
+      req.body.content,
+    );
+    res.status(201).json({ data: comment });
   } catch (err) {
     next(err);
   }

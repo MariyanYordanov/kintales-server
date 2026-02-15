@@ -3,7 +3,7 @@ import express from 'express';
 import { createServer } from 'node:http';
 import passport from 'passport';
 import { securityMiddleware } from './middleware/security.middleware.js';
-import { corsMiddleware } from './middleware/cors.middleware.js';
+import { corsMiddleware, allowedOrigins } from './middleware/cors.middleware.js';
 import { globalLimiter } from './middleware/rateLimit.middleware.js';
 import { configurePassport } from './config/passport.js';
 import authRoutes from './routes/auth.routes.js';
@@ -15,6 +15,9 @@ import photosRoutes from './routes/photos.routes.js';
 import audioRoutes from './routes/audio.routes.js';
 import deathRoutes from './routes/death.routes.js';
 import storiesRoutes from './routes/stories.routes.js';
+import commentsRoutes from './routes/comments.routes.js';
+import { initSocketIO } from './websocket/io.js';
+import { setupCommentHandlers } from './websocket/comments.ws.js';
 import { AppError } from './utils/errors.js';
 import logger from './utils/logger.js';
 import { pool } from './config/database.js';
@@ -22,6 +25,10 @@ import { startScheduler } from './jobs/scheduler.js';
 
 const app = express();
 const server = createServer(app);
+
+// === WebSocket (Socket.io) ===
+const io = initSocketIO(server, allowedOrigins);
+setupCommentHandlers(io);
 
 // Trust first proxy (Nginx) — required for rate limiting behind reverse proxy
 app.set('trust proxy', 1);
@@ -76,6 +83,9 @@ app.use('/api/death-records', deathRoutes);
 
 // Stories (Feature 3.2)
 app.use('/api/stories', storiesRoutes);
+
+// Comments (Feature 3.3)
+app.use('/api/comments', commentsRoutes);
 
 // 404 handler
 app.use((_req, _res, next) => {

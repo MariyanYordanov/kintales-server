@@ -179,7 +179,7 @@ export function sanitizeCommemoration(comm) {
  * @param {object[]} [sanitizedAttachments] - Already-sanitized attachment objects
  * @returns {object} Safe story object for API responses
  */
-export function sanitizeStory(story, sanitizedAttachments = []) {
+export function sanitizeStory(story, sanitizedAttachments = [], sanitizedComments = []) {
   return {
     id: story.id,
     treeId: story.treeId,
@@ -187,8 +187,24 @@ export function sanitizeStory(story, sanitizedAttachments = []) {
     authorId: story.authorId,
     content: story.content,
     attachments: sanitizedAttachments,
+    comments: sanitizedComments,
     createdAt: story.createdAt,
     updatedAt: story.updatedAt,
+  };
+}
+
+/**
+ * Sanitize a comment row.
+ * @param {object} comment - Drizzle comments row
+ * @returns {object} Safe comment object for API responses
+ */
+export function sanitizeComment(comment) {
+  return {
+    id: comment.id,
+    storyId: comment.storyId,
+    authorId: comment.authorId,
+    content: comment.content,
+    createdAt: comment.createdAt,
   };
 }
 

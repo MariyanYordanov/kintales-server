@@ -1,7 +1,7 @@
 import cors from 'cors';
 import { AppError } from '../utils/errors.js';
 
-const allowedOrigins = (process.env.APP_URL || 'http://localhost:3000')
+export const allowedOrigins = (process.env.APP_URL || 'http://localhost:3000')
   .split(',')
   .map((url) => url.trim());
 

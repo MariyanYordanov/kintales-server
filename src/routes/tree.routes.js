@@ -7,6 +7,7 @@ import { getEventsSchema } from './events.schemas.js';
 import { getStoriesSchema } from './stories.schemas.js';
 import * as treeService from '../services/tree.service.js';
 import * as relativesService from '../services/relatives.service.js';
+import * as relationshipsService from '../services/relationships.service.js';
 import * as deathService from '../services/death.service.js';
 import * as eventsService from '../services/events.service.js';
 import * as storiesService from '../services/stories.service.js';
@@ -55,6 +56,16 @@ router.get('/:id/relatives', validate(paramsWithId), requireTreeRole('viewer'), 
   try {
     const relatives = await relativesService.getTreeRelatives(req.params.id);
     res.json({ data: relatives });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// GET /api/trees/:id/relationships — all relationships in tree (any member)
+router.get('/:id/relationships', validate(paramsWithId), requireTreeRole('viewer'), async (req, res, next) => {
+  try {
+    const rels = await relationshipsService.getTreeRelationships(req.params.id);
+    res.json({ data: rels });
   } catch (err) {
     next(err);
   }

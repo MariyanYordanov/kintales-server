@@ -94,6 +94,20 @@ export async function createRelationship(data, userId) {
 }
 
 /**
+ * Get all relationships for a tree.
+ * @param {string} treeId
+ * @returns {Promise<object[]>}
+ */
+export async function getTreeRelationships(treeId) {
+  const rows = await db
+    .select()
+    .from(relationships)
+    .where(eq(relationships.treeId, treeId));
+
+  return rows.map(sanitizeRelationship);
+}
+
+/**
  * Delete a relationship.
  * @param {string} relationshipId
  * @param {string} userId - Requesting user ID

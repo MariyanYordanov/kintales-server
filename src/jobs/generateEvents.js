@@ -2,6 +2,7 @@ import { eq, and, between } from 'drizzle-orm';
 import { db } from '../config/database.js';
 import { familyTrees, treeMembers, notifications } from '../db/schema.js';
 import { getTreeEvents } from '../services/events.service.js';
+import { toISODate } from '../utils/date.js';
 import logger from '../utils/logger.js';
 
 /**
@@ -191,10 +192,3 @@ function buildNotificationBody(event) {
   }
 }
 
-/** Format Date as YYYY-MM-DD string. */
-function toISODate(date) {
-  const y = date.getFullYear();
-  const m = String(date.getMonth() + 1).padStart(2, '0');
-  const d = String(date.getDate()).padStart(2, '0');
-  return `${y}-${m}-${d}`;
-}

@@ -389,6 +389,7 @@ export const notifications = pgTable(
     index('notifications_user_id_idx').on(table.userId),
     index('notifications_tree_id_idx').on(table.treeId),
     index('notifications_relative_id_idx').on(table.relativeId),
+    index('notifications_push_sent_event_date_idx').on(table.pushSent, table.eventDate),
   ]
 );
 

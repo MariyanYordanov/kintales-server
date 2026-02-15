@@ -436,6 +436,7 @@ export const treeGuardians = pgTable(
     index('tree_guardians_tree_id_idx').on(table.treeId),
     index('tree_guardians_guardian_user_id_idx').on(table.guardianUserId),
     index('tree_guardians_assigned_by_idx').on(table.assignedBy),
+    unique('tree_guardians_tree_email_unique').on(table.treeId, table.guardianEmail),
   ]
 );
 

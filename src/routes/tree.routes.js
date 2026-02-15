@@ -10,6 +10,8 @@ import * as relativesService from '../services/relatives.service.js';
 import * as deathService from '../services/death.service.js';
 import * as eventsService from '../services/events.service.js';
 import * as storiesService from '../services/stories.service.js';
+import * as guardianService from '../services/guardian.service.js';
+import * as legacyService from '../services/legacy.service.js';
 
 const router = Router();
 
@@ -83,6 +85,26 @@ router.get('/:id/death-records', validate(paramsWithId), requireTreeRole('viewer
   try {
     const records = await deathService.getTreeDeathRecords(req.params.id, req.user.userId);
     res.json({ data: records });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// GET /api/trees/:id/guardians — list guardians (owner only)
+router.get('/:id/guardians', validate(paramsWithId), requireTreeRole('owner'), async (req, res, next) => {
+  try {
+    const guardians = await guardianService.getTreeGuardians(req.params.id);
+    res.json({ data: guardians });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// GET /api/trees/:id/legacy-keys — list legacy keys (editor+)
+router.get('/:id/legacy-keys', validate(paramsWithId), requireTreeRole('editor'), async (req, res, next) => {
+  try {
+    const keys = await legacyService.getTreeLegacyKeys(req.params.id);
+    res.json({ data: keys });
   } catch (err) {
     next(err);
   }

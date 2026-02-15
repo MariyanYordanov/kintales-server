@@ -225,3 +225,43 @@ export function sanitizeAttachment(attachment, presignedUrl) {
     createdAt: attachment.createdAt,
   };
 }
+
+/**
+ * Sanitize a tree guardian row.
+ * @param {object} guardian - Drizzle tree_guardians row
+ * @returns {object} Safe guardian object for API responses
+ */
+export function sanitizeGuardian(guardian) {
+  return {
+    id: guardian.id,
+    treeId: guardian.treeId,
+    guardianUserId: guardian.guardianUserId,
+    guardianEmail: guardian.guardianEmail,
+    guardianName: guardian.guardianName,
+    assignedBy: guardian.assignedBy,
+    status: guardian.status,
+    permissions: guardian.permissions,
+    createdAt: guardian.createdAt,
+  };
+}
+
+/**
+ * Sanitize a legacy key row.
+ * @param {object} key - Drizzle legacy_keys row
+ * @returns {object} Safe legacy key object for API responses
+ */
+export function sanitizeLegacyKey(key) {
+  return {
+    id: key.id,
+    treeId: key.treeId,
+    createdBy: key.createdBy,
+    keyCode: key.keyCode,
+    keyType: key.keyType,
+    recipientEmail: key.recipientEmail,
+    recipientName: key.recipientName,
+    status: key.status,
+    usedBy: key.usedBy,
+    usedAt: key.usedAt,
+    createdAt: key.createdAt,
+  };
+}

@@ -16,6 +16,8 @@ import audioRoutes from './routes/audio.routes.js';
 import deathRoutes from './routes/death.routes.js';
 import storiesRoutes from './routes/stories.routes.js';
 import commentsRoutes from './routes/comments.routes.js';
+import guardiansRoutes from './routes/guardians.routes.js';
+import legacyRoutes from './routes/legacy.routes.js';
 import { initSocketIO } from './websocket/io.js';
 import { setupCommentHandlers } from './websocket/comments.ws.js';
 import { AppError } from './utils/errors.js';
@@ -86,6 +88,10 @@ app.use('/api/stories', storiesRoutes);
 
 // Comments (Feature 3.3)
 app.use('/api/comments', commentsRoutes);
+
+// Guardians + Legacy Keys (Feature 3.4)
+app.use('/api/guardians', guardiansRoutes);
+app.use('/api/legacy-keys', legacyRoutes);
 
 // 404 handler
 app.use((_req, _res, next) => {

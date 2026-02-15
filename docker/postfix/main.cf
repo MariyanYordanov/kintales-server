@@ -3,8 +3,8 @@
 # ============================================
 
 # --- General ---
-myhostname = mail.kintales.com
-mydomain = kintales.com
+myhostname = mail.kintales.net
+mydomain = kintales.net
 myorigin = $mydomain
 mydestination = localhost
 inet_interfaces = all

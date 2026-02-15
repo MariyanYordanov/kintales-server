@@ -9,4 +9,4 @@ export const transporter = nodemailer.createTransport({
   tls: { rejectUnauthorized: isProd },
 });
 
-export const MAIL_FROM = process.env.MAIL_FROM || 'noreply@kintales.com';
+export const MAIL_FROM = process.env.MAIL_FROM || 'noreply@kintales.net';

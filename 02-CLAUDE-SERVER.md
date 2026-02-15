@@ -654,7 +654,7 @@ services:
     volumes:
       - ./docker/postfix/opendkim:/etc/opendkim
     environment:
-      MAIL_DOMAIN: kintales.com
+      MAIL_DOMAIN: kintales.net
     networks:
       - internal
 
@@ -710,7 +710,7 @@ JWT_REFRESH_EXPIRY=7d
 # Google OAuth
 GOOGLE_CLIENT_ID=<from_google_cloud_console>
 GOOGLE_CLIENT_SECRET=<from_google_cloud_console>
-GOOGLE_CALLBACK_URL=https://api.kintales.com/api/auth/google/callback
+GOOGLE_CALLBACK_URL=https://api.kintales.net/api/auth/google/callback
 
 # MinIO
 MINIO_ACCESS_KEY=<random_20_chars>
@@ -719,11 +719,11 @@ MINIO_ENDPOINT=minio
 MINIO_PORT=9000
 
 # Email
-MAIL_DOMAIN=kintales.com
-MAIL_FROM=noreply@kintales.com
+MAIL_DOMAIN=kintales.net
+MAIL_FROM=noreply@kintales.net
 
 # App
-APP_URL=https://kintales.com
+APP_URL=https://kintales.net
 API_PORT=3000
 NODE_ENV=production
 

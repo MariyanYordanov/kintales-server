@@ -64,7 +64,7 @@ services:
     volumes:
       - ./docker/postfix/opendkim:/etc/opendkim:ro
     environment:
-      MAIL_DOMAIN: ${MAIL_DOMAIN:-kintales.com}
+      MAIL_DOMAIN: ${MAIL_DOMAIN:-kintales.net}
     networks:
       - internal
     restart: unless-stopped

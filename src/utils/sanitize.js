@@ -172,3 +172,40 @@ export function sanitizeCommemoration(comm) {
     createdAt: comm.createdAt,
   };
 }
+
+/**
+ * Sanitize a story row — include presigned attachment URLs.
+ * @param {object} story - Drizzle stories row
+ * @param {object[]} [sanitizedAttachments] - Already-sanitized attachment objects
+ * @returns {object} Safe story object for API responses
+ */
+export function sanitizeStory(story, sanitizedAttachments = []) {
+  return {
+    id: story.id,
+    treeId: story.treeId,
+    relativeId: story.relativeId,
+    authorId: story.authorId,
+    content: story.content,
+    attachments: sanitizedAttachments,
+    createdAt: story.createdAt,
+    updatedAt: story.updatedAt,
+  };
+}
+
+/**
+ * Sanitize a story attachment row — replace fileUrl with presigned URL.
+ * @param {object} attachment - Drizzle story_attachments row
+ * @param {string|null} presignedUrl - Presigned URL for the file
+ * @returns {object} Safe attachment object for API responses
+ */
+export function sanitizeAttachment(attachment, presignedUrl) {
+  return {
+    id: attachment.id,
+    storyId: attachment.storyId,
+    fileUrl: presignedUrl,
+    fileType: attachment.fileType,
+    caption: attachment.caption,
+    sortOrder: attachment.sortOrder,
+    createdAt: attachment.createdAt,
+  };
+}

@@ -1,6 +1,15 @@
 import { z } from 'zod';
 
-const stripHtml = (str) => str.replace(/<[^>]*>/g, '');
+/** Strip HTML tags iteratively to handle nested/obfuscated patterns. */
+function stripHtml(str) {
+  let result = str;
+  let prev;
+  do {
+    prev = result;
+    result = result.replace(/<[^>]*>/g, '');
+  } while (result !== prev);
+  return result;
+}
 
 /** Refine: day is valid for the given month/year (e.g. no Feb 30). */
 function refineDateValidity(data) {

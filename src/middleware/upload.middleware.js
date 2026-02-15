@@ -5,18 +5,23 @@ const ALLOWED_TYPES = {
   avatar: ['image/jpeg', 'image/png', 'image/webp'],
   photo: ['image/jpeg', 'image/png', 'image/webp'],
   audio: ['audio/mpeg', 'audio/wav', 'audio/mp4', 'audio/ogg'],
+  storyAttachment: [
+    'image/jpeg', 'image/png', 'image/webp',
+    'audio/mpeg', 'audio/wav', 'audio/mp4', 'audio/ogg',
+  ],
 };
 
 const SIZE_LIMITS = {
   avatar: 2 * 1024 * 1024,   // 2 MB
   photo: 5 * 1024 * 1024,    // 5 MB
   audio: 20 * 1024 * 1024,   // 20 MB
+  storyAttachment: 20 * 1024 * 1024, // 20 MB (audio max)
 };
 
 /**
  * Create a multer upload middleware for a specific file type.
  * Uses memory storage (buffer available via req.file.buffer).
- * @param {'avatar'|'photo'|'audio'} type
+ * @param {'avatar'|'photo'|'audio'|'storyAttachment'} type
  * @param {number} [maxFiles=1] - Max number of files (>1 uses .array())
  * @returns {import('multer').Multer}
  */

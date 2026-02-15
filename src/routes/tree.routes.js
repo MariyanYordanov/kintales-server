@@ -4,10 +4,12 @@ import { validate } from '../middleware/validate.middleware.js';
 import { requireTreeRole } from '../middleware/treeAccess.middleware.js';
 import { paramsWithId, updateTreeSchema } from './tree.schemas.js';
 import { getEventsSchema } from './events.schemas.js';
+import { getStoriesSchema } from './stories.schemas.js';
 import * as treeService from '../services/tree.service.js';
 import * as relativesService from '../services/relatives.service.js';
 import * as deathService from '../services/death.service.js';
 import * as eventsService from '../services/events.service.js';
+import * as storiesService from '../services/stories.service.js';
 
 const router = Router();
 
@@ -59,6 +61,18 @@ router.get('/:id/events', validate(getEventsSchema), requireTreeRole('viewer'), 
   try {
     const events = await eventsService.getTreeEvents(req.params.id, req.query.from, req.query.to);
     res.json({ data: events });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// GET /api/trees/:id/stories — paginated stories (any member)
+router.get('/:id/stories', validate(getStoriesSchema), requireTreeRole('viewer'), async (req, res, next) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 20;
+    const result = await storiesService.getTreeStories(req.params.id, page, limit);
+    res.json({ data: result.stories, meta: result.meta });
   } catch (err) {
     next(err);
   }

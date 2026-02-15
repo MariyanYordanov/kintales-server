@@ -14,6 +14,7 @@ import relationshipsRoutes from './routes/relationships.routes.js';
 import photosRoutes from './routes/photos.routes.js';
 import audioRoutes from './routes/audio.routes.js';
 import deathRoutes from './routes/death.routes.js';
+import storiesRoutes from './routes/stories.routes.js';
 import { AppError } from './utils/errors.js';
 import logger from './utils/logger.js';
 import { pool } from './config/database.js';
@@ -72,6 +73,9 @@ app.use('/api/audio', audioRoutes);
 
 // Death records (Feature 2.3)
 app.use('/api/death-records', deathRoutes);
+
+// Stories (Feature 3.2)
+app.use('/api/stories', storiesRoutes);
 
 // 404 handler
 app.use((_req, _res, next) => {

@@ -55,6 +55,16 @@ router.delete('/:id', validate(paramsWithRelativeId), async (req, res, next) => 
   }
 });
 
+// POST /api/relatives/:id/anonymize — replace name with "Роднина", remove avatar (editor+)
+router.post('/:id/anonymize', validate(paramsWithRelativeId), async (req, res, next) => {
+  try {
+    const relative = await relativesService.anonymizeRelative(req.params.id, req.user.userId);
+    res.json({ data: relative });
+  } catch (err) {
+    next(err);
+  }
+});
+
 // GET /api/relatives/:id/photos — list photos for a relative
 router.get('/:id/photos', validate(paramsWithRelativeId), async (req, res, next) => {
   try {

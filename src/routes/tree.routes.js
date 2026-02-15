@@ -12,6 +12,8 @@ import * as eventsService from '../services/events.service.js';
 import * as storiesService from '../services/stories.service.js';
 import * as guardianService from '../services/guardian.service.js';
 import * as legacyService from '../services/legacy.service.js';
+import * as exportService from '../services/export.service.js';
+import { exportLimiter } from '../middleware/rateLimit.middleware.js';
 
 const router = Router();
 
@@ -95,6 +97,15 @@ router.get('/:id/guardians', validate(paramsWithId), requireTreeRole('owner'), a
   try {
     const guardians = await guardianService.getTreeGuardians(req.params.id);
     res.json({ data: guardians });
+  } catch (err) {
+    next(err);
+  }
+});
+
+// GET /api/trees/:id/export — export tree as ZIP (editor+)
+router.get('/:id/export', validate(paramsWithId), requireTreeRole('editor'), exportLimiter, async (req, res, next) => {
+  try {
+    await exportService.exportTreeAsZip(req.params.id, req.user.userId, res);
   } catch (err) {
     next(err);
   }

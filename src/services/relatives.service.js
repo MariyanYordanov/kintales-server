@@ -4,6 +4,7 @@ import { relatives } from '../db/schema.js';
 import { notFound } from '../utils/errors.js';
 import { verifyTreeAccess } from '../utils/treeAccess.js';
 import { sanitizeRelative } from '../utils/sanitize.js';
+import { deleteFile, BUCKETS } from './storage.service.js';
 import logger from '../utils/logger.js';
 
 /**
@@ -121,4 +122,51 @@ export async function deleteRelative(relativeId, userId) {
   await db.delete(relatives).where(eq(relatives.id, relativeId));
 
   logger.info('Relative deleted', { relativeId, treeId: existing.treeId, userId });
+}
+
+/**
+ * Anonymize a relative — replace name with "Роднина", remove bio and avatar.
+ * Keeps birth/death dates, relationships, photos, audio, and stories intact.
+ * @param {string} relativeId
+ * @param {string} userId
+ * @returns {Promise<object>} Sanitized relative
+ */
+export async function anonymizeRelative(relativeId, userId) {
+  const [existing] = await db
+    .select()
+    .from(relatives)
+    .where(eq(relatives.id, relativeId))
+    .limit(1);
+
+  if (!existing) {
+    throw notFound('Relative');
+  }
+
+  await verifyTreeAccess(existing.treeId, userId, 'editor');
+
+  const oldAvatarUrl = existing.avatarUrl;
+
+  const [updated] = await db
+    .update(relatives)
+    .set({
+      fullName: 'Роднина',
+      bio: null,
+      avatarUrl: null,
+      updatedAt: new Date(),
+    })
+    .where(eq(relatives.id, relativeId))
+    .returning();
+
+  // Delete old avatar from MinIO (non-fatal)
+  if (oldAvatarUrl) {
+    await deleteFile(BUCKETS.AVATARS, oldAvatarUrl);
+  }
+
+  logger.info('Relative anonymized', {
+    relativeId,
+    treeId: existing.treeId,
+    userId,
+  });
+
+  return sanitizeRelative(updated);
 }

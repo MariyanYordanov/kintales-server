@@ -18,6 +18,7 @@ import storiesRoutes from './routes/stories.routes.js';
 import commentsRoutes from './routes/comments.routes.js';
 import guardiansRoutes from './routes/guardians.routes.js';
 import legacyRoutes from './routes/legacy.routes.js';
+import accountRoutes from './routes/account.routes.js';
 import { initSocketIO } from './websocket/io.js';
 import { setupCommentHandlers } from './websocket/comments.ws.js';
 import { AppError } from './utils/errors.js';
@@ -92,6 +93,9 @@ app.use('/api/comments', commentsRoutes);
 // Guardians + Legacy Keys (Feature 3.4)
 app.use('/api/guardians', guardiansRoutes);
 app.use('/api/legacy-keys', legacyRoutes);
+
+// Account (GDPR — Feature 3.5)
+app.use('/api/account', accountRoutes);
 
 // 404 handler
 app.use((_req, _res, next) => {

@@ -23,3 +23,19 @@ export const uploadLimiter = rateLimit({
   legacyHeaders: false,
   message: { error: 'Too many uploads, please try again later.' },
 });
+
+export const exportLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many export requests, please try again later.' },
+});
+
+export const destructiveLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: 3,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many destructive requests, please try again later.' },
+});

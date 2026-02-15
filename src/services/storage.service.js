@@ -87,4 +87,22 @@ export async function deleteFile(bucket, objectKey) {
   }
 }
 
+/**
+ * Get a readable stream for a file from MinIO.
+ * Returns null (never throws) if the objectKey is falsy or the file doesn't exist.
+ * @param {string} bucket - Bucket name
+ * @param {string} objectKey - Object key (path)
+ * @returns {Promise<import('stream').Readable|null>}
+ */
+export async function getFileStream(bucket, objectKey) {
+  if (!objectKey) return null;
+
+  try {
+    return await minioClient.getObject(bucket, objectKey);
+  } catch (err) {
+    logger.error('MinIO getObject failed', { bucket, objectKey, error: err.message });
+    return null;
+  }
+}
+
 export { BUCKETS };
